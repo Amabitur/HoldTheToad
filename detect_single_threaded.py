@@ -12,8 +12,8 @@ score_thresh=0.2
 num_hands_detect = 1
 
 image_np = cv2.imread('./source/hand.jpg')
-toad = cv2.imread('./data/toad1.png', cv2.IMREAD_UNCHANGED)
-toad = detector_utils.prepare_image(toad)
+toad = cv2.imread('./data/toad3.jpg')
+#toad = detector_utils.prepare_image(toad)
 print(toad.shape)
 cv2.imwrite('toad.png', toad)
 

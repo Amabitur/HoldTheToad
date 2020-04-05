@@ -108,11 +108,18 @@ def overlay_image(bg, fg, coords):
     # изображения, но он содержит только маску наложения
     alpha = np.zeros(bg.shape[:2], dtype="uint8")
     dwiMask = cv2.cvtColor(fg, cv2.COLOR_BGRA2GRAY)
-    dwiMask = cv2.threshold(dwiMask, 0, 255, cv2.THRESH_BINARY)[1]
-    kernel = np.ones((6, 6), np.uint8)
-    op = cv2.erode(dwiMask, kernel, iterations = 1)
-    kernel1 = np.ones((7, 7), np.uint8)
-    op = cv2.morphologyEx(op, cv2.MORPH_OPEN, kernel1)
+    cv2.imwrite('gray.jpg', dwiMask)
+    #dwiMask = cv2.threshold(dwiMask, 0, 255, cv2.THRESH_BINARY_INV)[1]
+    dwiMask = cv2.adaptiveThreshold(dwiMask, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,  cv2.THRESH_BINARY_INV, 11, 2)
+    cv2.imwrite('mask.jpg', dwiMask)
+    kernel = np.ones((13, 13), np.uint8)
+    #op = cv2.morphologyEx(dwiMask, cv2.MORPH_CLOSE, kernel)
+    dil = cv2.dilate(dwiMask,kernel,iterations = 1)
+    kernel = np.ones((27, 27), np.uint8)
+    op = cv2.erode(dil, kernel, iterations = 1)
+    #kernel1 = np.ones((10, 10), np.uint8)
+    #op = cv2.morphologyEx(op, cv2.MORPH_OPEN, kernel1)
+    cv2.imwrite('mask1.jpg', op)
     alpha[y:y + sH, x:x + sW] = op
     alpha = np.dstack([alpha] * 3)
 
