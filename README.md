@@ -8,4 +8,5 @@
 ПРОФИТ
 
 *detect_single_threaded.py* - основная часть программы
+
 *test.py* - отражатель жаб
