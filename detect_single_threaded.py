@@ -11,8 +11,8 @@ detection_graph, sess = detector_utils.load_inference_graph()
 score_thresh=0.2
 num_hands_detect = 1
 
-image_np = cv2.imread('./source/hand.jpg')
-toad = cv2.imread('./data/toad3.jpg')
+image_np = cv2.imread('/home/deer/Pictures/photo_2020-04-05_18-36-28.jpg')
+toad = cv2.imread('/home/deer/Pictures/toads/new/44695610-european-toad-b-bufo-isolated-on-white-n.jpg')
 #toad = detector_utils.prepare_image(toad)
 print(toad.shape)
 cv2.imwrite('toad.png', toad)

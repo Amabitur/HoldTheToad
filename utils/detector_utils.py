@@ -54,11 +54,11 @@ def draw_toad_on_image(box, image_np, toad):
     im_width = image_np.shape[1]
     im_height = image_np.shape[0]
     (left, right, top, bottom) = (box[1] * im_width, box[3] * im_width, box[0] * im_height, box[2] * im_height)
-    perc0 = max(image_np.shape)/max(toad.shape)
+    perc0 = min(im_width, im_height)/max(toad.shape)
     w0 = int(toad.shape[1]*perc0)
     h0 = int(toad.shape[0]*perc0)
     toad = cv2.resize(toad, (h0, w0))
-    perc = 0.4
+    perc = 0.6
     w = int(toad.shape[1]*perc)
     h = int(toad.shape[0]*perc)
     toad = cv2.resize(toad, (h, w))
@@ -112,13 +112,13 @@ def overlay_image(bg, fg, coords):
     #dwiMask = cv2.threshold(dwiMask, 0, 255, cv2.THRESH_BINARY_INV)[1]
     dwiMask = cv2.adaptiveThreshold(dwiMask, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,  cv2.THRESH_BINARY_INV, 11, 2)
     cv2.imwrite('mask.jpg', dwiMask)
-    kernel = np.ones((13, 13), np.uint8)
+    kernel = np.ones((8, 8), np.uint8)
     #op = cv2.morphologyEx(dwiMask, cv2.MORPH_CLOSE, kernel)
-    dil = cv2.dilate(dwiMask,kernel,iterations = 1)
-    kernel = np.ones((27, 27), np.uint8)
+    dil = cv2.dilate(dwiMask, kernel, iterations = 1)
+    kernel = np.ones((15, 15), np.uint8)
     op = cv2.erode(dil, kernel, iterations = 1)
-    #kernel1 = np.ones((10, 10), np.uint8)
-    #op = cv2.morphologyEx(op, cv2.MORPH_OPEN, kernel1)
+    kernel1 = np.ones((10, 10), np.uint8)
+    op = cv2.morphologyEx(op, cv2.MORPH_OPEN, kernel1)
     cv2.imwrite('mask1.jpg', op)
     alpha[y:y + sH, x:x + sW] = op
     alpha = np.dstack([alpha] * 3)
