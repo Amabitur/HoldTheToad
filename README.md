@@ -5,6 +5,8 @@
 - conda env update -f toads_env.yml
 - conda activate ToadEnv
 
+Перед запуском нужно сделать export KMP_DUPLICATE_LIB_OK=TRUE
+
 ПРОФИТ
 
 *detect_single_threaded.py* - основная часть программы
