@@ -2,7 +2,6 @@ pillow==6.1.0
 numpy==1.18.4
 pytelegrambotapi==3.7.1
 opencv-contrib-python==4.1.2.30
-opencv-python==3.4.7.28
 tensorboard==2.1.0
 tensorflow==2.1.0
 tensorflow-estimator==2.1.0
