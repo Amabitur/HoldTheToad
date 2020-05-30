@@ -14,10 +14,12 @@ score_thresh = 0.2
 num_hands_detect = 1
 result_storage_path = 'tmp'
 
+texts = ['Подбираем легушьку для вас...', 'Жабоньки уже в пути!', 'Отправляемся в болото...', 'Квакусики рядом!', 'Ожидаем лягуху...']
+
 def save_image(message):
     cid = message.chat.id
     image_id = get_image_id_from_message(message)
-    bot.send_message(cid, 'Подбираем легушьку для вас...')
+    bot.send_message(cid, np.random.choice(texts))
     file_path = bot.get_file(image_id).file_path
     image_url = "https://api.telegram.org/file/bot{0}/{1}".format(token, file_path)
     if not os.path.exists(result_storage_path):
