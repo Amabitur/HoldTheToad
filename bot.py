@@ -44,7 +44,8 @@ detection_graph, sess = detector_utils.load_inference_graph()
 
 num_hands_detect = 1
 
-bot = telebot.TeleBot(environ['TELEGRAM_TOKEN'])
+token = environ['TELEGRAM_TOKEN']
+bot = telebot.TeleBot(token)
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
