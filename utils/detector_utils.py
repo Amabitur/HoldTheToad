@@ -7,6 +7,7 @@ from datetime import datetime
 import cv2
 from utils import label_map_util
 from collections import defaultdict
+from PIL import Image
 
 
 detection_graph = tf.Graph()
@@ -48,17 +49,17 @@ def draw_toad_on_image(box, image_np, toad):
     im_width = image_np.shape[1]
     im_height = image_np.shape[0]
     (left, right, top, bottom) = (box[1] * im_width, box[3] * im_width, box[0] * im_height, box[2] * im_height)
-    perc0 = min(im_width, im_height)/max(toad.shape)
+    perc0 = min(np.abs(left-right), np.abs(top-bottom))/max(toad.shape)
     w0 = int(toad.shape[1]*perc0)
     h0 = int(toad.shape[0]*perc0)
-    toad = cv2.resize(toad, (h0, w0))
-    perc = 0.6
-    w = int(toad.shape[1]*perc)
-    h = int(toad.shape[0]*perc)
-    toad = cv2.resize(toad, (h, w))
+    toad = cv2.resize(toad, (w0, h0))
     x = int((left+right)/2 - toad.shape[1]/2)
-    y = int((top+bottom)/2)
-    best_image = overlay_image(image_np, toad, (x, y))
+    y = int((top+bottom)/2 - toad.shape[0]/2)
+    pilimg = Image.fromarray(image_np)
+    piltoad = Image.fromarray(toad)
+    pilimg.paste(piltoad, (int(left), int(top)), piltoad)
+    best_image = np.array(pilimg)
+    #best_image = overlay_image(image_np, toad, (x, y))
     return best_image
 
 def detect_objects(image_np, detection_graph, sess):
@@ -75,45 +76,6 @@ def detect_objects(image_np, detection_graph, sess):
             detection_classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
     return np.squeeze(boxes), np.squeeze(scores)
-
-def overlay_image(bg, fg, coords):
-    (sH, sW) = fg.shape[:2]
-    (x, y) = coords
-    overlay = np.zeros(bg.shape, dtype="uint8")
-    overlay[y:y + sH, x:x + sW] = fg
-    alpha = np.zeros(bg.shape[:2], dtype="uint8")
-
-    dwiMask = cv2.cvtColor(fg, cv2.COLOR_BGRA2GRAY)
-    cv2.imwrite('gray.jpg', dwiMask)
-    dwiMask = cv2.threshold(dwiMask, 230, 255, cv2.THRESH_BINARY_INV)[1]
-    cv2.imwrite('mask.jpg', dwiMask)
-    kernel = np.ones((8, 8), np.uint8)
-    dil = cv2.dilate(dwiMask, kernel, iterations = 1)
-    kernel = np.ones((15, 15), np.uint8)
-    op = cv2.erode(dil, kernel, iterations = 1)
-    kernel1 = np.ones((10, 10), np.uint8)
-    op = cv2.morphologyEx(op, cv2.MORPH_OPEN, kernel1)
-    cv2.imwrite('mask1.jpg', op)
-
-    alpha[y:y + sH, x:x + sW] = op
-    alpha = np.dstack([alpha] * 3)
-
-    output = alpha_blend(overlay, bg, alpha)
-
-    return output
-
-
-def alpha_blend(fg, bg, alpha):
-    fg = fg.astype("float")
-    bg = bg.astype("float")
-    alpha = alpha.astype("float") / 255
-
-    fg = cv2.multiply(fg, alpha)
-    bg = cv2.multiply(bg, 1-alpha)
-
-    output = cv2.add(fg, bg)
-
-    return output.astype("uint8")
 
 def draw_box_on_image(num_hands_detect, boxes, image_np):
     im_width = image_np.shape[1]
