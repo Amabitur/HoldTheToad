@@ -51,6 +51,8 @@ bot = telebot.TeleBot(token)
 def get_text_messages(message):
     if message.text == "/help":
         bot.send_message(message.from_user.id, "Отправь мне фотографию ладошки!")
+    elif message.text == "/start":
+        bot.send_message(message.from_user.id, "Жду фотографию пустой ладошки...")
 
 @bot.message_handler(content_types=['photo'])
 def get_photo_message(message):
