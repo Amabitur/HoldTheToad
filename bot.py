@@ -35,7 +35,7 @@ def image_processing(image_name):
     toad = cv2.imread('./data/'+np.random.choice(os.listdir('./data/')), cv2.IMREAD_UNCHANGED)
     boxes, scores = detector_utils.detect_objects(image_np, detection_graph, sess)
     best_box = boxes[np.argmax(scores)]
-    new_image = detector_utils.draw_box_on_image(num_hands_detect, boxes, image_np)
+    #new_image = detector_utils.draw_box_on_image(num_hands_detect, boxes, image_np)
     best_image = detector_utils.draw_toad_on_image(best_box, image_np, toad)
     cv2.imwrite(image_name, best_image)
     return best_image
