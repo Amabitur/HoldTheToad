@@ -6,6 +6,7 @@ import argparse
 import os
 import numpy as np
 import urllib.request
+from os import environ
 
 import telebot
 
@@ -39,14 +40,11 @@ def image_processing(image_name):
     cv2.imwrite(image_name, best_image)
     return best_image
 
-
-
 detection_graph, sess = detector_utils.load_inference_graph()
 
 num_hands_detect = 1
 
-
-bot = telebot.TeleBot(token)
+bot = telebot.TeleBot(environ['TELEGRAM_TOKEN'])
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
