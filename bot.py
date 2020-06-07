@@ -10,6 +10,8 @@ from os import environ
 
 import telebot
 
+#Aaaaa просёр настроек пользователя :((
+
 score_thresh = 0.2
 num_hands_detect = 1
 result_storage_path = 'tmp'
